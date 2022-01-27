@@ -26,3 +26,14 @@ class SignUpSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         return User.objects.create_user(**validated_data)
 
+
+class TaskAuthorSerializer(serializers.ModelSerializer):
+    full_name = serializers.SerializerMethodField()
+
+    class Meta:
+        model = User
+        fields = ['id', 'full_name']
+
+    def get_full_name(self, obj):
+        return obj.get_full_name()
+
