@@ -41,6 +41,7 @@ class User(AbstractUser):
     username = None
     email = models.EmailField('email', unique=True)
     last_activity = models.DateTimeField(default=timezone.now)
+    created_at = models.DateTimeField(auto_now_add=True)
 
     objects = UserManager()
 
