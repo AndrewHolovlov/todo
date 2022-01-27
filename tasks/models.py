@@ -19,10 +19,10 @@ class Executor(models.Model):
     class Meta:
         unique_together = ('user', 'task',)
 
+    def __str__(self):
+        return self.user.__str__()
+
 
 class Attachment(models.Model):
     task = models.ForeignKey(Task, on_delete=models.CASCADE, related_name='attachments')
     file = models.FileField(upload_to='attachments')
-
-
-
