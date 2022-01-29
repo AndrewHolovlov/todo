@@ -67,12 +67,15 @@ class TaskExecutorView(APIView):
         if serializer.is_valid():
             executor = serializer.save()
 
-            send_email(subject='New task', user=executor.user.email, template='add_executor.html',
-                       content={
-                           'full_name': executor.user.get_full_name(),
-                           'task_title': executor.task.title,
-                           'task_link': 'not_implemented_yet'
-                       })
+            try:
+                send_email(subject='New task', user=executor.user.email, template='add_executor.html',
+                           content={
+                               'full_name': executor.user.get_full_name(),
+                               'task_title': executor.task.title,
+                               'task_link': 'not_implemented_yet'
+                           })
+            except Exception as e:
+                logger.error(e, exc_info=True)
 
             return Response(status=status.HTTP_200_OK)
         else:
@@ -118,6 +121,20 @@ class AttachmentView(APIView):
         except Exception as e:
             logger.error(e, exc_info=True)
             raise exceptions.ValidationError('Something went wrong')
+
+    def get_object(self):
+        try:
+            return Attachment.objects.get(id=self.kwargs['pk'])
+        except Attachment.DoesNotExist:
+            raise exceptions.NotFound('Attachment does not exist')
+
+    def delete(self, request, *args, **kwargs):
+        attachment = self.get_object()
+        if attachment.task.author != request.user:
+            raise exceptions.PermissionDenied('You are not author of this task')
+        attachment.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
 
 
 

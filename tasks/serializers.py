@@ -13,10 +13,16 @@ class ExecutorField(serializers.RelatedField):
         }
 
 
+class AttachmentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Attachment
+        fields = ['id', 'image']
+
+
 class TasksSerializer(serializers.ModelSerializer):
     author = UserSerializer(read_only=True)
     executors = ExecutorField(many=True, read_only=True)
-    attachments = serializers.StringRelatedField(many=True, read_only=True)
+    attachments = AttachmentSerializer(many=True, read_only=True)
 
     class Meta:
         model = Task
