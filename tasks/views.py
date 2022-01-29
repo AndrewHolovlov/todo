@@ -9,6 +9,7 @@ from rest_framework.permissions import IsAuthenticated
 from accounts.models import User
 from .models import Task, Executor, Attachment
 from .serializers import TasksSerializer, TaskExecutorSerializer
+from config.utils import send_email
 
 logger = logging.getLogger(__name__)
 
@@ -64,7 +65,15 @@ class TaskExecutorView(APIView):
 
         serializer = self.serializer_class(data={**request.data, 'task': task_id})
         if serializer.is_valid():
-            serializer.save()
+            executor = serializer.save()
+
+            send_email(subject='New task', user=executor.user.email, template='add_executor.html',
+                       content={
+                           'full_name': executor.user.get_full_name(),
+                           'task_title': executor.task.title,
+                           'task_link': 'not_implemented_yet'
+                       })
+
             return Response(status=status.HTTP_200_OK)
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
