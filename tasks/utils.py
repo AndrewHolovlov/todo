@@ -1,8 +1,6 @@
 import os
 import uuid
 
-from rest_framework.permissions import BasePermission
-
 
 def get_file_path(instance, filename):
     """
