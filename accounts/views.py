@@ -1,10 +1,10 @@
-from rest_framework import status
-from rest_framework.permissions import AllowAny
+from rest_framework import status, generics
+from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework_simplejwt.views import TokenObtainPairView
 
-from .serializers import LoginSerializer, SignUpSerializer
+from .serializers import LoginSerializer, SignUpSerializer, UserSerializer
 from .models import User
 
 
@@ -28,4 +28,10 @@ class SignUpView(APIView):
             return Response(token, status=status.HTTP_201_CREATED)
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class UserListView(generics.ListAPIView):
+    queryset = User.objects.filter(is_superuser=False)
+    serializer_class = UserSerializer
+    permission_classes = (IsAuthenticated,)
 

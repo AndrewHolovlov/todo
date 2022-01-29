@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
 
-from accounts.serializers import TaskAuthorSerializer
+from accounts.serializers import UserSerializer
 from .models import Task, Executor, Attachment
 
 
@@ -14,12 +14,13 @@ class ExecutorField(serializers.RelatedField):
 
 
 class TasksSerializer(serializers.ModelSerializer):
-    author = TaskAuthorSerializer(read_only=True)
+    author = UserSerializer(read_only=True)
     executors = ExecutorField(many=True, read_only=True)
+    attachments = serializers.StringRelatedField(many=True, read_only=True)
 
     class Meta:
         model = Task
-        fields = ['id', 'title', 'content', 'author', 'executors', 'created_at', 'updated_at']
+        fields = ['id', 'title', 'content', 'author', 'executors', 'created_at', 'updated_at', 'attachments']
 
     def validate(self, attrs):
         attrs['author'] = self.context.get('user')

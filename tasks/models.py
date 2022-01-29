@@ -25,3 +25,6 @@ class Executor(models.Model):
 class Attachment(models.Model):
     task = models.ForeignKey(Task, on_delete=models.CASCADE, related_name='attachments')
     image = models.ImageField(upload_to=get_file_path)
+
+    def __str__(self):
+        return self.image.url
