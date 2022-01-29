@@ -1,4 +1,5 @@
 from rest_framework import serializers
+from rest_framework.exceptions import ValidationError
 
 from accounts.serializers import TaskAuthorSerializer
 from .models import Task, Executor, Attachment
@@ -23,3 +24,16 @@ class TasksSerializer(serializers.ModelSerializer):
     def validate(self, attrs):
         attrs['author'] = self.context.get('user')
         return attrs
+
+
+class TaskExecutorSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Executor
+        fields = ['id', 'task', 'user']
+        validators = [
+            serializers.UniqueTogetherValidator(
+                queryset=model.objects.all(),
+                fields=('task', 'user'),
+                message="User is already executor of this task"
+            )
+        ]
