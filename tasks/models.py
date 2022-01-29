@@ -1,5 +1,7 @@
 from django.db import models
 
+from .utils import get_file_path
+
 
 class Task(models.Model):
     title = models.CharField('Title', max_length=300)
@@ -17,12 +19,9 @@ class Executor(models.Model):
     task = models.ForeignKey(Task, on_delete=models.CASCADE, related_name='executors')
 
     class Meta:
-        unique_together = ('user', 'task',)
-
-    def __str__(self):
-        return self.user.__str__()
+        unique_together = ('user', 'task')
 
 
 class Attachment(models.Model):
     task = models.ForeignKey(Task, on_delete=models.CASCADE, related_name='attachments')
-    file = models.FileField(upload_to='attachments')
+    image = models.ImageField(upload_to=get_file_path)
