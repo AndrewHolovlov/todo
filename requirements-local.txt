@@ -1,9 +1,7 @@
 django
-django-heroku
 django-rest-framework
 djangorestframework-simplejwt
 drf-yasg
-gunicorn
 python-dotenv
 psycopg2-binary
 Pillow
