@@ -1,3 +1,7 @@
 from django.contrib import admin
 
-# Register your models here.
+from .models import Task, Executor, Attachment
+
+admin.site.register(Task)
+admin.site.register(Executor)
+admin.site.register(Attachment)
