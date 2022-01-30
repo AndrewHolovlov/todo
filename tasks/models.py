@@ -21,6 +21,9 @@ class Executor(models.Model):
     class Meta:
         unique_together = ('user', 'task')
 
+    def get_full_name(self):
+        return self.user.get_full_name()
+
 
 class Attachment(models.Model):
     task = models.ForeignKey(Task, on_delete=models.CASCADE, related_name='attachments')
