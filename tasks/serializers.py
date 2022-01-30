@@ -5,14 +5,6 @@ from accounts.serializers import UserSerializer
 from .models import Task, Executor, Attachment
 
 
-class ExecutorField(serializers.RelatedField):
-    def to_representation(self, obj):
-        return {
-            'id': obj.user.id,
-            'full_name': obj.user.get_full_name(),
-        }
-
-
 class AttachmentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Attachment
@@ -21,7 +13,7 @@ class AttachmentSerializer(serializers.ModelSerializer):
 
 class TasksSerializer(serializers.ModelSerializer):
     author = UserSerializer(read_only=True)
-    executors = ExecutorField(many=True, read_only=True)
+    executors = UserSerializer(many=True, read_only=True)
     attachments = AttachmentSerializer(many=True, read_only=True)
 
     class Meta:
