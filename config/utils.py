@@ -1,9 +1,5 @@
 from rest_framework.views import exception_handler
 
-from django.template.loader import get_template
-from django.core.mail import EmailMessage
-from django.conf import settings
-
 
 def custom_exception_handler(exc, context):
     # Call REST framework's default exception handler first,
@@ -19,13 +15,3 @@ def custom_exception_handler(exc, context):
 
     return response
 
-
-def send_email(subject, user, template, content, from_email=settings.DEFAULT_FROM_EMAIL):
-    to = user if isinstance(user, list) else [user]
-    # ctx = {'content': content}
-
-    message = get_template(template).render(content)
-    msg = EmailMessage(subject, message, from_email=from_email, bcc=to)
-
-    msg.content_subtype = 'html'
-    msg.send()

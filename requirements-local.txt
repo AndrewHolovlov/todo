@@ -5,3 +5,5 @@ drf-yasg
 python-dotenv
 psycopg2-binary
 Pillow
+celery[redis]
+redis

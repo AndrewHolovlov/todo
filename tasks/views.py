@@ -11,7 +11,7 @@ from drf_yasg import openapi
 from accounts.models import User
 from .models import Task, Executor, Attachment
 from .serializers import TasksSerializer, TaskExecutorSerializer
-from config.utils import send_email
+from config.tasks import send_email
 
 logger = logging.getLogger(__name__)
 
@@ -116,12 +116,12 @@ class TaskExecutorView(APIView):
             executor = serializer.save()
 
             try:
-                send_email(subject='New task', user=executor.user.email, template='add_executor.html',
-                           content={
-                               'full_name': executor.user.get_full_name(),
-                               'task_title': executor.task.title,
-                               'task_link': 'not_implemented_yet'
-                           })
+                send_email.delay(subject='New task', user=executor.user.email, template='add_executor.html',
+                                 content={
+                                     'full_name': executor.user.get_full_name(),
+                                     'task_title': executor.task.title,
+                                     'task_link': 'not_implemented_yet'
+                                 })
             except Exception as e:
                 logger.error(e, exc_info=True)
 
